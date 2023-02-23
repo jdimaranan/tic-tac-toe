@@ -57,7 +57,7 @@ function App() {
       <h2>Xam Tic-Tac-Toe</h2>
       <p>Player 1: <span style={{ fontWeight: "bold" }}>{playerNameOne}</span></p>
       <p>Player 2: <span style={{ fontWeight: "bold" }}>{playerNameTwo}</span></p>
-      <div className="status" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}><span>{winner ? "Winner" : "Next Move:"}</span>{status}</div>
+      <div className="status" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}><span>{winner ? "Winner: " : "Next Move: "}</span>{status}</div>
       <div className="board-row">
         {renderSquare(0)}
         {renderSquare(1)}
@@ -97,7 +97,7 @@ function App() {
 
   const winner = calculateWinner(board);
   const status = winner
-    ? winner === "X" ? <img src={xamLogo} style={{ width: 40, height: 40 }} /> : <img src={easterEgg} style={{ width: 40, height: 40 }} /> 
+    ? winner === "X" ? playerNameOne : playerNameTwo
     : xIsNext ? <img src={xamLogo} style={{ width: 40, height: 40 }} /> : <img src={easterEgg} style={{ width: 40, height: 40 }} />;
 
   const hasNames = playerNameOne && playerNameTwo;
