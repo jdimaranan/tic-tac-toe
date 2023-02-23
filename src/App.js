@@ -1,16 +1,34 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useRef } from 'react';
+
+import xamLogo from "./assets/xam-o.png"
+import easterEgg from "./assets/ester-egg.jpeg"
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
-  const [playerName, setPlayerName] = useState("");
+  const [playerNameOne, setPlayerNameOne] = useState("");
+  const [playerNameTwo, setPlayerNameTwo] = useState("");
+  const [error, setHasError] = useState("");
 
-  const inputRef = useRef(null);
+  const inputOneRef = useRef(null);
+  const inputTwoRef = useRef(null);
 
-  function handleChangePlayerName() {
-    const val = inputRef.current.value;
+  const renderImage = (letter) => {
+    if (letter === "X") return <img src={xamLogo} style={{ width: 40, height: 40 }} />;
+    else if (letter === "O") return <img src={easterEgg} style={{ width: 40, height: 40 }} />;
+    else return <div style={{ width: 40, height: 40 }}></div>;
+  }
 
-    setPlayerName(val);
+  function handleChangePlayerNames() {
+    const player1 = inputOneRef.current.value;
+    const player2 = inputTwoRef.current.value;
+
+    if (player1 !== player2) {
+      setPlayerNameOne(player1);
+      setPlayerNameTwo(player2);
+      setHasError(false);
+    } else setHasError(true);
   }
 
   function handleClick(index) {
@@ -27,23 +45,19 @@ function App() {
 
   function renderSquare(index) {
     return (
-      <button className="square" onClick={() => handleClick(index)} style={{ padding: 20 }}>
-        {board[index]}
+      <button className="square" onClick={() => handleClick(index)} style={{ padding: 0 }}>
+        { renderImage(board[index]) }
       </button>
     );
   }
 
-  const winner = calculateWinner(board);
-  const status = winner
-    ? `Winner: ${winner}`
-    : `Next player: ${xIsNext ? 'X' : 'O'}`;
-
-  return ( <>
-    { playerName ? 
-    <div style={{ textAlign: "center"}}>
+  function renderBoard() {
+    return (
+      <div style={{ textAlign: "center"}}>
       <h2>Xam Tic-Tac-Toe</h2>
-      <p>Welcome, {playerName}</p>
-      <div className="status">{status}</div>
+      <p>Player 1: <span style={{ fontWeight: "bold" }}>{playerNameOne}</span></p>
+      <p>Player 2: <span style={{ fontWeight: "bold" }}>{playerNameTwo}</span></p>
+      <div className="status" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}><span>{winner ? "Winner" : "Next Move:"}</span>{status}</div>
       <div className="board-row">
         {renderSquare(0)}
         {renderSquare(1)}
@@ -59,13 +73,39 @@ function App() {
         {renderSquare(7)}
         {renderSquare(8)}
       </div>
-    </div> : <div style={{ padding: 20 }}>
-    <span>Enter Player's Name: </span>
-    <input ref={inputRef}/>
-    <button onClick={handleChangePlayerName}>Enter</button>
     </div>
+    )
   }
-  </>
+
+  function renderPlayersForm() {
+    return (
+      <div style={{ padding: 20, textAlign: "center" }}>
+        <h2>Xam Tic-Tac-Toe</h2>
+        <span>Enter Player 1 Name: </span>
+        <input ref={inputOneRef} style={{ borderColor: error ? "red" : "" }} />
+        <br />
+        <br />
+        <span>Enter Player 2 Name: </span>
+        <input ref={inputTwoRef} style={{ borderColor: error ? "red" : "" }} />
+        <br /> 
+        <span style={{ color: "red" }}>{error}</span>
+        <br /> 
+        <button onClick={handleChangePlayerNames}>Enter</button>
+      </div>
+    )
+  }
+
+  const winner = calculateWinner(board);
+  const status = winner
+    ? winner === "X" ? <img src={xamLogo} style={{ width: 40, height: 40 }} /> : <img src={easterEgg} style={{ width: 40, height: 40 }} /> 
+    : xIsNext ? <img src={xamLogo} style={{ width: 40, height: 40 }} /> : <img src={easterEgg} style={{ width: 40, height: 40 }} />;
+
+  const hasNames = playerNameOne && playerNameTwo;
+
+  return ( 
+    <>
+      { hasNames ? renderBoard() : renderPlayersForm() }
+    </>
   );
 }
 
