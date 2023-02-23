@@ -94,7 +94,7 @@ function App() {
           {renderSquare(8)}
         </div>
 
-        <p>Leaderboard</p>
+        <h2>Leaderboard</h2>
         {leaderboard.map((val, index) => {
           return <div key={index}><p>Name:{val.name} Score: {val.score}</p></div>
         })}
